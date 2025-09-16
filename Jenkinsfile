@@ -32,7 +32,7 @@ pipeline {
                 echo 'Deploying....'
                 ansiblePlaybook credentialsId: 'ansible-ssh-key', 
                                 inventory: 'ansible/inventory.yaml',
-                                playbook: 'ansible/sites-playbook.yml'
+                                playbook: 'ansible/sites-playbook.yml',
                                 colorizedOutput: true,
                                 disableHostKeyChecking: true,
                                 vaultCredentialsId: 'ansible-vault-password'
