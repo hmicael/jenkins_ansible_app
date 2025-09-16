@@ -2,3 +2,5 @@ all:
   hosts:
     localhost:
       ansible_hosts: 127.0.0.1
+    doko:
+      ansible_hosts: 192.168.1.24

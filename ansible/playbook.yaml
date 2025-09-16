@@ -1,5 +1,5 @@
 - name: Setup database and environment
-  hosts: localhost
+  hosts: doko
   become: yes
   vars_files:
     - vault/env.yaml
@@ -63,7 +63,7 @@
           DB_PASSWORD={{ DB_PASSWORD }}
           
 - name: Setup Nginx & PHP
-  hosts: localhost
+  hosts: doko
   become: yes
   vars_files:
     - vault/env.yaml
