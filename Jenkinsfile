@@ -24,7 +24,9 @@ pipeline {
         }
 
         stage('Deliver') {
-            sh 'pyinstaller --onefile src/python/insert.py' // créer un executable dist.insert
+            steps {
+                sh 'pyinstaller --onefile src/python/insert.py' // créer un executable dist.insert
+            }
         }
 
         stage('Deploy') {
