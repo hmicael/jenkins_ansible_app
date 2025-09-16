@@ -1,0 +1,118 @@
+- name: Setup database and environment
+  hosts: localhost
+  become: yes
+  vars_files:
+    - vault/env.yaml
+  tasks:
+    - name: Setup MySQL server & Python environment
+      apt:
+        name: mysql-server mysql-client
+        state: present
+        update_cache: yes
+
+    - name: Ensure MySQL is running
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+
+    - name: Create database
+      mysql_db:
+        name: "{{ DB_NAME }}"
+        state: present
+        login_unix_socket: /run/mysqld/mysqld.sock
+
+    - name: Create database user
+      mysql_user:
+        name: "{{ DB_USER }}"
+        password: "{{ DB_PASSWORD }}"
+        priv: "{{ DB_NAME }}.*:ALL"
+        state: present
+
+    - name: Copy SQL script to server
+      copy:
+        src: ../src/database/create_table.sql
+        dest: /tmp/create_table.sql
+        mode: '0644'
+    
+    - name: Create table
+      shell:
+        cmd: |
+          mysql -u {{ DB_USER }} -p{{ DB_PASSWORD }} {{ DB_NAME }} < /tmp/create_table.sql
+        args:
+          executable: /bin/bash
+
+    - name: Create linux user for application
+      user:
+        name: "{{ APP_NAME }}"
+        state: present
+        shell: /bin/bash
+        home: "{{ PYTHON_APP_PATH }}"
+        create_home: yes
+
+    - name: Generate Python .env file
+      copy:
+        dest: "{{ PYTHON_APP_PATH }}/.env"
+        mode: '0644'
+        owner: "{{ APP_NAME }}"
+        group: "{{ APP_NAME }}"
+        content: |
+          DB_HOST={{ DB_HOST }}
+          DB_NAME={{ DB_NAME }}
+          DB_USER={{ DB_USER }}
+          DB_PASSWORD={{ DB_PASSWORD }}
+          
+- name: Setup Nginx & PHP
+  hosts: localhost
+  become: yes
+  vars_files:
+    - vault/env.yaml
+  tasks:
+    - name: Install Nginx and PHP
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop:
+        - nginx
+        - php8.1-fpm
+        - php8.1-mysql
+        - php8.1-cli
+        - php8.1-curl
+        - php8.1-mbstring
+        - php8.1-xml
+        - php8.1-zip
+
+    - name: Disable default Nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Configure Nginx
+      template:
+        src: templates/jenkins_ansible_site.j2
+        dest: /etc/nginx/sites-available/jenkins_ansible_site
+
+    - name: Enable Nginx site
+      file:
+        src: /etc/nginx/sites-available/jenkins_ansible_site
+        dest: /etc/nginx/sites-enabled/jenkins_ansible_site
+        state: link
+    
+    - name: Copy application files
+      copy:
+        src: ../src/php/
+        dest: "{{ PHP_APP_PATH }}"
+        owner: www-data
+        group: www-data
+        mode: '0755'
+
+    - name: Restart PHP-FPM
+      service:
+        name: php8.1-fpm
+        state: restarted
+
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted

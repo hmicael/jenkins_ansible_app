@@ -1,0 +1,6 @@
+mysqlclient
+mysql-connector-python
+python-dotenv
+pytest
+pytest-cov
+dotenv

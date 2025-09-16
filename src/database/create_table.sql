@@ -1,8 +1,8 @@
 -- Création de la base de données si elle n'existe pas
-CREATE DATABASE IF NOT EXISTS demo_app;
+-- CREATE DATABASE IF NOT EXISTS demo_app;
 
 -- Utilisation de la base
-USE demo_app;
+-- USE demo_app;
 
 -- Création de la table principale
 CREATE TABLE IF NOT EXISTS utilisateurs (
