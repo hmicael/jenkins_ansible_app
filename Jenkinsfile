@@ -33,7 +33,7 @@ pipeline {
                 ansiblePlaybook credentialsId: 'ansible-ssh-key', 
                                 inventory: 'ansible/inventory.yaml',
                                 playbook: 'ansible/sites-playbook.yml'
-                                colorized: true,
+                                colorizedOutput: true,
                                 disableHostKeyChecking: true,
                                 vaultCredentialsId: 'ansible-vault-password'
 
