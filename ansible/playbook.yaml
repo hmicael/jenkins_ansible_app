@@ -6,7 +6,9 @@
   tasks:
     - name: Setup MySQL server & Python environment
       apt:
-        name: mysql-server mysql-client
+        name: 
+        - mysql-server 
+        - mysql-client
         state: present
         update_cache: yes
 
