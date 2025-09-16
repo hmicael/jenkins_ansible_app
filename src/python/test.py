@@ -27,6 +27,7 @@ class TestMyFunction(unittest.TestCase):
             )
         """)
         cls.connection.commit()
+        
 
     @classmethod
     def tearDownClass(cls):

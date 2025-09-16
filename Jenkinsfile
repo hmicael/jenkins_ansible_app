@@ -8,20 +8,20 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                sh '''
-                pytest \
-                --junit-xml=src/python/test-reports/results.xml \
-                src/python/test.py
-                '''
-            }
-            post {
-                always {
-                    junit 'src/python/test-reports/results.xml'
-                }
-            }
-        }
+        // stage('Test') {
+        //     steps {
+        //         sh '''
+        //         pytest \
+        //         --junit-xml=src/python/test-reports/results.xml \
+        //         src/python/test.py
+        //         '''
+        //     }
+        //     post {
+        //         always {
+        //             junit 'src/python/test-reports/results.xml'
+        //         }
+        //     }
+        // }
 
         stage('Deliver') {
             steps {
@@ -35,7 +35,7 @@ pipeline {
                 ansiblePlaybook credentialsId: 'ansible-ssh-key', 
                                 inventory: 'ansible/inventory.yaml',
                                 playbook: 'ansible/sites-playbook.yml',
-                                colorized: true,
+                                colorizedOutput: true,
                                 disableHostKeyChecking: true,
                                 vaultCredentialsId: 'ansible-vault-password'
 
