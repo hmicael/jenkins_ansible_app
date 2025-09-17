@@ -1,6 +1,5 @@
 server {
-        listen 80 {{ DOMAIN_NAME }};
-        listen [::]:80 {{ DOMAIN_NAME }};
+        listen 80;
 
         root {{ PHP_APP_PATH }};
 
@@ -19,10 +18,7 @@ server {
         #
         location ~ \.php$ {
                 include snippets/fastcgi-php.conf;
-
                 # With php-fpm (or other unix sockets):
                 fastcgi_pass unix:/run/php/php8.1-fpm.sock;
-                # With php-cgi (or other tcp sockets):
-                fastcgi_pass 127.0.0.1:9000;
         }
 }

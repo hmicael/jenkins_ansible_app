@@ -10,7 +10,7 @@
         - mysql-server 
         - mysql-client
         state: present
-        update_cache: yes
+        update_cache: no 
 
     - name: Ensure MySQL is running
       service:
@@ -23,6 +23,8 @@
         name: "{{ DB_NAME }}"
         state: present
         login_unix_socket: /run/mysqld/mysqld.sock
+        login_user: henintsoa
+        login_password: 1698henintsoa
 
     - name: Create database user
       mysql_user:
@@ -30,6 +32,8 @@
         password: "{{ DB_PASSWORD }}"
         priv: "{{ DB_NAME }}.*:ALL"
         state: present
+        login_user: henintsoa
+        login_password: 1698henintsoa
 
     - name: Copy SQL script to server
       copy:
@@ -39,10 +43,9 @@
     
     - name: Create table
       shell:
-        cmd: |
-          mysql -u {{ DB_USER }} -p{{ DB_PASSWORD }} {{ DB_NAME }} < /tmp/create_table.sql
-        args:
-          executable: /bin/bash
+        cmd: "mysql -u {{ DB_USER }} -p{{ DB_PASSWORD }} {{ DB_NAME }} < /tmp/create_table.sql"
+      args:
+        executable: /bin/bash
 
     - name: Create linux user for application
       user:
@@ -63,6 +66,14 @@
           DB_NAME={{ DB_NAME }}
           DB_USER={{ DB_USER }}
           DB_PASSWORD={{ DB_PASSWORD }}
+
+    - name: Copy python binary
+      copy:
+        src: "dist/insert"
+        dest: "{{ APP_NAME }}/insert"
+        mode: '0755'
+        owner: "{{ APP_NAME }}"
+        group: "{{ APP_NAME }}"
           
 - name: Setup Nginx & PHP
   hosts: doko
@@ -74,7 +85,7 @@
       apt:
         name: "{{ item }}"
         state: present
-        update_cache: yes
+        update_cache: no 
       loop:
         - nginx
         - php8.1-fpm
