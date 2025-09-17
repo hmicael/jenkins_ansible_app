@@ -46,13 +46,12 @@
       args:
         executable: /bin/bash
 
-    - name: Create linux user for application
-      user:
+    - name: Create dir for the project
+      file:
         name: "{{ APP_NAME }}"
-        state: present
-        shell: /bin/bash
-        home: "{{ PYTHON_APP_PATH }}"
-        create_home: yes
+        path: "{{ PYTHON_APP_PATH }}"
+        state: directory
+        mode: '0755'
 
     - name: Generate Python .env file
       copy:
