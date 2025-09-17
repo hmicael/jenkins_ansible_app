@@ -66,7 +66,7 @@
     - name: Copy python binary
       copy:
         src: "../dist/insert"
-        dest: "{{ APP_NAME }}/"
+        dest: "{{ PYTHON_APP_PATH }}/"
         mode: '0755'
           
 - name: Setup Nginx & PHP
