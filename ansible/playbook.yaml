@@ -28,12 +28,13 @@
     - name: Create database user
       mysql_user:
         name: "{{ DB_USER }}"
-        password: "{{ DB_PASSWORD }}"
         priv: "{{ DB_NAME }}.*:ALL"
         state: present
         login_user: "{{ DB_LOGIN_USR }}"
         login_password: "{{ DB_LOGIN_PWD }}"
         plugin: caching_sha2_password
+        plugin_auth_string: "{{ DB_PASSWORD }}"
+        salt: 1234567890abcdefghij
 
     - name: Copy SQL script to server
       copy:
