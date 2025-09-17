@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path='.env')
 
 def insertToDb(dict_values):
+    print(os.getenv('DB_USER'))
     try:
         connection = mysql.connector.connect(
             host=os.getenv('DB_HOST'),
