@@ -23,8 +23,8 @@
         name: "{{ DB_NAME }}"
         state: present
         login_unix_socket: /run/mysqld/mysqld.sock
-        login_user: henintsoa
-        login_password: 1698henintsoa
+        login_user: "{{ DB_LOGIN_USR }}"
+        login_password: "{{ DB_LOGIN_PWD }}"
 
     - name: Create database user
       mysql_user:
@@ -32,8 +32,8 @@
         password: "{{ DB_PASSWORD }}"
         priv: "{{ DB_NAME }}.*:ALL"
         state: present
-        login_user: henintsoa
-        login_password: 1698henintsoa
+        login_user: "{{ DB_LOGIN_USR }}"
+        login_password: "{{ DB_LOGIN_PWD }}"
 
     - name: Copy SQL script to server
       copy:
