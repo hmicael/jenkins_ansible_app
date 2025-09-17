@@ -69,8 +69,8 @@
 
     - name: Copy python binary
       copy:
-        src: "dist/insert"
-        dest: "{{ APP_NAME }}/insert"
+        src: "../dist/insert"
+        dest: "{{ APP_NAME }}/"
         mode: '0755'
         owner: "{{ APP_NAME }}"
         group: "{{ APP_NAME }}"
