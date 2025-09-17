@@ -37,7 +37,10 @@ pipeline {
                                 playbook: 'ansible/playbook.yaml',
                                 colorized: true,
                                 disableHostKeyChecking: true,
-                                vaultCredentialsId: 'ansible-vault-password'
+                                vaultCredentialsId: 'ansible-vault-password',
+                                extraVars: [
+                                    ansible_become_pass: 'ansible-vault-password'
+                                ]
 
             }
         }
