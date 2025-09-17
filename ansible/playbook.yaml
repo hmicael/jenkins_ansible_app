@@ -1,6 +1,5 @@
 - name: Setup database and environment
   hosts: doko
-  become: yes
   vars_files:
     - vault/env.yaml
   tasks:
@@ -77,7 +76,6 @@
           
 - name: Setup Nginx & PHP
   hosts: doko
-  become: yes
   vars_files:
     - vault/env.yaml
   tasks:
